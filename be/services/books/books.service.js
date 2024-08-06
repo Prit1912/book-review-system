@@ -5,10 +5,35 @@ import { isValidObjectId } from "mongoose";
 import { reviewSchema } from "./dto/reviewSchema";
 import { validateSchema } from "../../utils/validators/schemaValidator";
 
-export const getAllBooks = async () => {
+export const getAllBooks = async (page = 1, limit = 10) => {
   try {
-    const books = await Book.find().populate({ path: "reviews" });
-    return books;
+    // Convert page and limit to integers
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+
+    // Ensure pageNumber and pageSize are positive integers
+    if (pageNumber < 1 || pageSize < 1) {
+      throw new BadRequestError("Page number and limit must be greater than 0");
+    }
+
+    // Calculate the skip value
+    const skip = (pageNumber - 1) * pageSize;
+
+    // Query the database with pagination
+    const books = await Book.find()
+      .populate({ path: "reviews" })
+      .skip(skip)
+      .limit(pageSize);
+
+    // Count the total number of books
+    const totalBooks = await Book.countDocuments();
+
+    return {
+      books,
+      totalBooks,
+      totalPages: Math.ceil(totalBooks / pageSize),
+      currentPage: pageNumber,
+    };
   } catch (error) {
     throw error;
   }
@@ -35,7 +60,7 @@ export const getBookById = async (id) => {
       throw new BadRequestError("Invalid id");
     }
 
-    const book = await Book.findById(id);
+    const book = await Book.findById(id).populate({ path: "reviews" });
     if (!book) {
       throw new UnprocessableEntityError("Book not found");
     }

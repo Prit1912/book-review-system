@@ -1,10 +1,10 @@
 import { createStore } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import { user } from "./modules/user";
+import { book } from "./modules/book";
 
 export default createStore({
   plugins: [createPersistedState()],
   modules: {
-    user,
+    book,
   },
 });

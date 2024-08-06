@@ -1,7 +1,7 @@
 import { errorResponse } from "../utils/error";
 
 const {
-  getAllBooks: getAllBooksSerive,
+  getAllBooks: getAllBooksService,
   createBook: createBookService,
   getBookById: getBookByIdService,
   updateBookById: updateBookByIdService,
@@ -12,8 +12,19 @@ const {
 
 export const getAllBooks = async (req, res) => {
   try {
-    const books = await getAllBooksSerive();
-    return res.send(books);
+    // Extract page and limit from query parameters, defaulting to 1 and 10
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+
+    const { books, totalBooks, totalPages, currentPage } =
+      await getAllBooksService(page, limit);
+
+    return res.json({
+      books,
+      totalBooks,
+      totalPages,
+      currentPage,
+    });
   } catch (error) {
     return errorResponse({
       req,

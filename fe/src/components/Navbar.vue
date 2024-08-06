@@ -2,8 +2,8 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
-        <h4 class="logo me-5">
-          <b> my<span class="primary-color">L</span>ogo </b>
+        <h4 class="me-5 mt-2">
+          <b> my<span class="primary-color">B</span>ooks </b>
         </h4>
         <!-- <img src="../assets/logo-udemy.svg" class="logo" alt="" /> -->
       </a>
@@ -24,35 +24,18 @@
             <router-link :to="{ name: 'Home' }">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'About' }">About</router-link>
+            <router-link :to="{ name: 'BooksList' }">Books</router-link>
           </li>
         </ul>
-        <form class="d-flex">
-          <div v-if="this.$store?.state?.user?.isLoggedIn">
-            <div>
-              <button class="btn btn-dark me-3" type="button">Profile</button>
-              <button class="btn btn-dark" type="button" @click="logout">
-                Logout
-              </button>
-            </div>
-          </div>
-          <div v-else>
-            <button
-              class="btn btn-dark me-3"
-              type="button"
-              @click="this.$router.push('/signup')"
-            >
-              Signup
-            </button>
-            <button
-              class="btn btn-dark"
-              type="button"
-              @click="this.$router.push('/login')"
-            >
-              Login
-            </button>
-          </div>
-        </form>
+        <div class="d-flex">
+          <button
+            class="btn btn-dark me-3"
+            type="button"
+            @click="this.$router.replace('/books/add-book')"
+          >
+            Add Book
+          </button>
+        </div>
       </div>
     </div>
   </nav>
@@ -62,14 +45,7 @@
 import "../assets/css/style.css";
 export default {
   name: "navbar",
-  methods: {
-    logout() {
-      // this.$store.dispatch("user/setToken", null),
-      //   this.$store.dispatch("user/setUser", null);
-      this.$store.dispatch("user/logout");
-      this.$router.push({ name: "Login" });
-    },
-  },
+  methods: {},
 };
 </script>
 
