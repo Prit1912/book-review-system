@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import api from "./services/api";
+import Vue3Toastify, { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const app = createApp(App);
 
@@ -30,4 +32,11 @@ api.interceptors.response.use(
 // Add the Axios instance to the Vue app instance
 app.config.globalProperties.$axios = api;
 
-app.use(store).use(router).mount("#app");
+app
+  .use(store)
+  .use(router)
+  .use(Vue3Toastify, {
+    autoClose: 3000,
+    position: toast.POSITION.TOP_CENTER, // Set toast position to top center
+  })
+  .mount("#app");

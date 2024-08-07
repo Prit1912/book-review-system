@@ -15,7 +15,10 @@
       <div v-if="!books?.length">No books available</div>
 
       <!-- Pagination Controls -->
-      <div class="d-flex justify-content-between mt-4">
+      <div
+        v-if="books && books.length"
+        class="d-flex justify-content-between mt-4"
+      >
         <button
           class="btn btn-secondary"
           :disabled="currentPage === 1"
@@ -33,9 +36,6 @@
         </button>
       </div>
     </div>
-    <div v-if="error" class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
   </div>
 </template>
 
@@ -43,6 +43,7 @@
 import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import BookListView from "../components/books/BookListView.vue";
+import { toast } from "vue3-toastify";
 
 const store = useStore();
 const books = ref([]);
@@ -58,11 +59,12 @@ const fetchBooks = async (page) => {
   loading.value = true;
   try {
     const response = await store.dispatch("book/fetchBooks", { page, limit });
-    books.value = response.books;
-    currentPage.value = response.currentPage;
-    totalPages.value = response.totalPages;
+    books.value = response?.books;
+    currentPage.value = response?.currentPage;
+    totalPages.value = response?.totalPages;
   } catch (err) {
     error.value = "Failed to load books";
+    toast.error(error.value);
   } finally {
     loading.value = false;
   }

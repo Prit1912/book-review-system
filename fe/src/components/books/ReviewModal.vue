@@ -68,6 +68,7 @@
 import { ref, defineEmits, defineProps } from "vue";
 import api from "../../services/api";
 import "bootstrap";
+import { toast } from "vue3-toastify";
 
 const emits = defineEmits(["review-added"]);
 
@@ -99,6 +100,7 @@ const submitReview = async () => {
     rating.value = 1;
     comment.value = "";
   } catch (err) {
+    toast.error(err?.response?.data?.error || "Could not add book review");
     console.log(err);
   }
 };

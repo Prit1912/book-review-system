@@ -29,6 +29,7 @@ import api from "../services/api";
 import BookDetails from "../components/books/BookDetails.vue";
 import BookReviews from "../components/books/BookReviews.vue";
 import ReviewModal from "../components/books/ReviewModal.vue";
+import { toast } from "vue3-toastify";
 
 const route = useRoute();
 const bookId = route.params.id;
@@ -45,7 +46,10 @@ onMounted(async () => {
     const reviewResponse = await api.get(`/v1/books/${bookId}/reviews`);
     reviews.value = reviewResponse.data;
   } catch (err) {
+    console.log(err);
+    console.log(err?.response);
     error.value = "Failed to load book details";
+    toast.error(err?.response?.data?.error);
   } finally {
     loading.value = false;
   }

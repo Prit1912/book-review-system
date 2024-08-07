@@ -1,3 +1,4 @@
+import { toast } from "vue3-toastify";
 import api from "../../services/api";
 
 export const book = {
@@ -20,6 +21,9 @@ export const book = {
         commit("SET_BOOKS", response?.data?.books || []);
         return response?.data;
       } catch (error) {
+        toast.error(
+          error?.response?.data?.error || "error fetching book details"
+        );
         console.error("Error fetching books:", error);
       }
     },

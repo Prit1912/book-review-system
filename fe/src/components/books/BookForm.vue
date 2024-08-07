@@ -6,9 +6,6 @@
           {{ isEditMode ? "Edit Book" : "Add New Book" }}
         </h4>
         <hr />
-        <div v-if="error" class="alert alert-danger" role="alert">
-          {{ error }}
-        </div>
         <form
           @submit.prevent="submit"
           class="row row-cols-lg-auto g-3 align-items-center"
@@ -123,6 +120,7 @@ import { ref, onMounted, defineProps, defineEmits } from "vue";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 import api from "../../services/api";
+import { toast } from "vue3-toastify";
 
 const props = defineProps({
   bookId: {
@@ -188,6 +186,7 @@ const submit = handleSubmit(async (values) => {
     }
     emits("finished");
   } catch (err) {
+    toast.error(err?.response?.data?.error || "Something went wrong");
     error.value = "Something went wrong";
   }
 });
