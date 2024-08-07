@@ -1,47 +1,34 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "../views/Home.vue";
-import Books from "../views/Books.vue";
-import AddBook from "../views/AddBook.vue";
-import BookDetail from "../views/BookDetail.vue";
-import EditBook from "../views/EditBook.vue";
 
+// Define routes with lazy loading
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: () => import("../views/Home.vue"),
   },
   {
     path: "/books",
     name: "BooksList",
-    component: Books,
+    component: () => import("../views/Books.vue"),
   },
   {
     path: "/books/:id",
     name: "BookDetails",
-    component: BookDetail,
+    component: () => import("../views/BookDetail.vue"),
     props: true,
   },
   {
     path: "/books/:id/edit",
     name: "EditBook",
-    component: EditBook,
+    component: () => import("../views/EditBook.vue"),
     props: true,
   },
   {
     path: "/books/add-book",
     name: "AddBook",
-    component: AddBook,
+    component: () => import("../views/AddBook.vue"),
   },
-  // {
-  // path: "/about",
-  // name: "About",
-  // route level code-splitting
-  // this generates a separate chunk (about.[hash].js) for this route
-  // which is lazy-loaded when the route is visited.
-  // component: () =>
-  // import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
 ];
 
 const router = createRouter({
