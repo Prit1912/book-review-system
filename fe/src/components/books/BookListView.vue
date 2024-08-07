@@ -6,7 +6,7 @@
           <h3 class="card-title">{{ book.title }}</h3>
           <p class="card-text">Author: {{ book.author }}</p>
           <p class="card-text">Genre: {{ book.genre }}</p>
-          <p class="card-text">Summary: {{ book.summary }}</p>
+          <p class="card-text summary">Summary: {{ book.summary }}</p>
           <p class="card-text">
             Published Date:
             {{ new Date(book.publishedDate).toLocaleDateString() }}
@@ -53,7 +53,6 @@ const deleteBook = async () => {
   try {
     await api.delete(`/v1/books/${props.book.id}`);
     emit("bookDeleted", props.book.id);
-    console.log("Book deleted successfully");
   } catch (error) {
     console.error("Failed to delete the book", error);
   }
@@ -69,12 +68,35 @@ const confirmDeleteBook = () => {
 <style scoped>
 .card-title {
   margin-bottom: 0.5rem;
+  font-size: 1.25rem; /* Adjust font size as needed */
+  font-weight: bold;
+  overflow: hidden; /* Ensures text doesn't overflow */
+  text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
+  white-space: nowrap; /* Prevents wrapping */
 }
+
 .card-text {
   margin-bottom: 0.3rem;
+  overflow: hidden; /* Ensures text doesn't overflow */
+  text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
+  white-space: nowrap; /* Prevents wrapping */
+}
+
+.card-body {
+  padding: 1rem; /* Add padding to prevent text from sticking to edges */
 }
 
 .fas:hover {
   cursor: pointer;
+}
+
+.card-text.summary {
+  margin-bottom: 0.3rem;
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Adjust the number of lines to show */
+  -webkit-box-orient: vertical;
+  white-space: normal; /* Allow wrapping */
 }
 </style>

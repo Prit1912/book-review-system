@@ -8,6 +8,7 @@ const {
   addBookReview,
   getBookReviews,
 } = require("../controllers/books.controller");
+const loggerMiddleware = require("../middleware/logger.middleware");
 
 const booksRouter = express.Router();
 

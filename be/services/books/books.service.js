@@ -90,7 +90,6 @@ export const updateBookById = async (id, updateBookPayload) => {
     }
     return book;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -103,7 +102,6 @@ export const deleteBookById = async (id) => {
     }
 
     const book = await Book.findByIdAndDelete(id);
-    console.log(book);
     if (!book) {
       throw new UnprocessableEntityError("Book not found");
     }

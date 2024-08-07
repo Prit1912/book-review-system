@@ -56,13 +56,15 @@
               <div class="input-group-text">
                 <i class="fas fa-tags"></i>
               </div>
-              <input
-                type="text"
-                class="form-control"
-                id="genre"
-                placeholder="Genre"
-                v-model="genre"
-              />
+              <select class="form-control" id="genre" v-model="genre">
+                <option
+                  v-for="genreOption in genres"
+                  :key="genreOption"
+                  :value="genreOption"
+                >
+                  {{ genreOption }}
+                </option>
+              </select>
             </div>
             <span class="error">{{ errorGenre }}</span>
           </div>
@@ -134,24 +136,30 @@ const emits = defineEmits(["finished"]);
 const isEditMode = ref(!!props.bookId);
 const today = ref(new Date().toISOString().split("T")[0]);
 
+const genres = [
+  "Fiction",
+  "Non-Fiction",
+  "Science Fiction",
+  "Fantasy",
+  "Mystery",
+  "Thriller",
+  "Romance",
+  "Horror",
+];
+
 const validationSchema = yup.object({
-  title: yup.string().required("Title is required"),
-  author: yup.string().required("Author is required"),
-  genre: yup.string().required("Genre is required"),
-  summary: yup.string().required("Summary is required"),
-  publishedDate: yup.date().required("Published Date is required"),
+  title: yup.string().required("Title is required").max(100),
+  author: yup.string().required("Author is required").max(50),
+  genre: yup
+    .string()
+    .required("Genre is required")
+    .oneOf(genres, "Invalid genre"),
+  summary: yup.string().required("Summary is required").max(200),
+  publishedDate: yup
+    .date()
+    .required("Published Date is required")
+    .max(new Date(), "Published date cannot be in the future"),
 });
-
-// Helper function to format date for input
-const formatDate = (date) => {
-  const d = new Date(date);
-  return d.toISOString().split("T")[0];
-};
-
-// Helper function to parse date from input
-const parseDate = (dateString) => {
-  return new Date(dateString).toISOString();
-};
 
 const { handleSubmit } = useForm({
   validationSchema,
@@ -168,10 +176,9 @@ const error = ref("");
 
 const submit = handleSubmit(async (values) => {
   try {
-    // Convert the date back to a suitable format before sending
     const formattedValues = {
       ...values,
-      publishedDate: parseDate(values.publishedDate),
+      publishedDate: new Date(values.publishedDate).toISOString(),
     };
 
     if (isEditMode.value) {
@@ -181,7 +188,6 @@ const submit = handleSubmit(async (values) => {
     }
     emits("finished");
   } catch (err) {
-    console.log(err);
     error.value = "Something went wrong";
   }
 });
@@ -194,9 +200,10 @@ onMounted(async () => {
       author.value = response.data.author;
       genre.value = response.data.genre;
       summary.value = response.data.summary;
-      publishedDate.value = formatDate(response.data.publishedDate);
+      publishedDate.value = new Date(response.data.publishedDate)
+        .toISOString()
+        .split("T")[0];
     } catch (err) {
-      console.log(err);
       error.value = "Failed to load book details";
     }
   }

@@ -17,7 +17,6 @@ export const book = {
         const response = await api.get("/v1/books", {
           params: { page, limit },
         });
-        console.log(response?.data?.books);
         commit("SET_BOOKS", response?.data?.books || []);
         return response?.data;
       } catch (error) {

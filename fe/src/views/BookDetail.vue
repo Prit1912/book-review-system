@@ -8,9 +8,17 @@
     </div>
     <div v-if="!loading && book">
       <BookDetails :book="book" />
+      <button
+        class="btn btn-primary mt-3"
+        data-bs-toggle="modal"
+        data-bs-target="#reviewModal"
+      >
+        Add Review
+      </button>
       <hr />
       <BookReviews :reviews="reviews" />
     </div>
+    <ReviewModal @review-added="handleReviewAdded" :bookId="bookId" />
   </div>
 </template>
 
@@ -20,6 +28,7 @@ import { useRoute } from "vue-router";
 import api from "../services/api";
 import BookDetails from "../components/books/BookDetails.vue";
 import BookReviews from "../components/books/BookReviews.vue";
+import ReviewModal from "../components/books/ReviewModal.vue";
 
 const route = useRoute();
 const bookId = route.params.id;
@@ -36,12 +45,16 @@ onMounted(async () => {
     const reviewResponse = await api.get(`/v1/books/${bookId}/reviews`);
     reviews.value = reviewResponse.data;
   } catch (err) {
-    console.log(err);
     error.value = "Failed to load book details";
   } finally {
     loading.value = false;
   }
 });
+
+const handleReviewAdded = async () => {
+  const reviewResponse = await api.get(`/v1/books/${bookId}/reviews`);
+  reviews.value = reviewResponse.data;
+};
 </script>
 
 <style scoped>

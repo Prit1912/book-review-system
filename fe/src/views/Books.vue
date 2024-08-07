@@ -50,7 +50,7 @@ const loading = ref(true);
 const error = ref("");
 const currentPage = ref(1);
 const totalPages = ref(1);
-const limit = 10; // Number of items per page
+const limit = 3; // Number of items per page
 
 const fetchBooks = async (page) => {
   if (page < 1 || page > totalPages.value) return; // Validate page number
@@ -62,7 +62,6 @@ const fetchBooks = async (page) => {
     currentPage.value = response.currentPage;
     totalPages.value = response.totalPages;
   } catch (err) {
-    console.log(err);
     error.value = "Failed to load books";
   } finally {
     loading.value = false;
